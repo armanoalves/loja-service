@@ -13,19 +13,27 @@ import br.com.alura.loja.util.JPAUtil;
 public class CadastroDeProduto {
 	public static void main(String[] args) {
 		Categoria celulares = new Categoria("CELULARES");
-		Produto celular = new Produto("S23 FE", "Muito Legal", new BigDecimal("2600"), celulares);
+//		Produto celular = new Produto("S23 FE", "Muito Legal", new BigDecimal("2600"), celulares);
 		
 		EntityManager em = JPAUtil.getEntityManager();
-		ProdutoDao produtoDao = new ProdutoDao(em);
-		CategoriaDao categoriaDao = new CategoriaDao(em);	
+//		ProdutoDao produtoDao = new ProdutoDao(em);
+//		CategoriaDao categoriaDao = new CategoriaDao(em);	
 		
 		em.getTransaction().begin();
 		
-		categoriaDao.cadastrar(celulares);
-		produtoDao.cadastrar(celular); 
+		em.persist(celulares);
+		celulares.setNome("Iphone 15");
 		
-		em.getTransaction().commit();
-		em.close();
+		em.flush();
+		em.clear();
 		
+//		categoriaDao.cadastrar(celulares);
+//		produtoDao.cadastrar(celular); 
+		
+		celulares = em.merge(celulares);
+		celulares.setNome("1221");
+		em.flush();
+		em.remove(celulares);
+		em.flush();
 	}
 }
